@@ -13,26 +13,55 @@ class Graph:
         """
         Add a vertex to the graph.
         """
-        pass  # TODO
+        self.vertices[vertex_id] = set()
 
     def add_edge(self, v1, v2):
         """
         Add a directed edge to the graph.
         """
-        pass  # TODO
+        ## add edge from v1 to v2
+
+        if v1 in self.vertices and v2 in self.vertices:
+            self.vertices[v1].add(v2)
+        else:
+            raise IndexError("Vertex does not have exist in graph.")
 
     def get_neighbors(self, vertex_id):
         """
         Get all neighbors (edges) of a vertex.
         """
-        pass  # TODO
+        return self.vertices[vertex_id]
 
+"""START OF TRAVERSALS"""
+
+    """BREADTH FIRST TRAVERSAL"""
     def bft(self, starting_vertex):
         """
         Print each vertex in breadth-first order
         beginning from starting_vertex.
         """
-        pass  # TODO
+        q = Queue()
+        q.enqueue(starting_vertex)
+
+        ##KEEP TRACK OF VISITED NODES
+        visited = set()
+
+        ##REPEAT UNTIL QUEUE IS EMPTY
+        while q.size() > 0:
+
+            #DEQUEUE FIRST VERTEX
+            v = q.dequeue()
+
+            ##IF IT'S NOT VISITED
+            if v not in visited:
+                print(v)
+
+            ##MARK AS VISITED
+            visited.add(v)
+
+            ##ENQUEUE ITS NEIGHBORS
+            for next_vert in self.get_neighbors(v):
+                q.enqueue(next_vert)
 
     def dft(self, starting_vertex):
         """
@@ -49,6 +78,8 @@ class Graph:
         This should be done using recursion.
         """
         pass  # TODO
+
+"""BEGINNING OF SEARCHES"""
 
     def bfs(self, starting_vertex, destination_vertex):
         """
