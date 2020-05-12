@@ -132,7 +132,36 @@ class Graph:
         starting_vertex to destination_vertex in
         breath-first order.
         """
-        pass  # TODO
+        q = Queue()
+
+        ##USE LIST TO REPRESENT PATH, the first should include the starting vertex
+        ## ENQUEUE THE PATH
+        q.enqueue([starting_vertex])
+        ##CREATE A SET TO STORE VISITED VERTICES
+        visited = set()        
+        ##REPEAT UNTIL QUEUE IS EMPTY
+        while q.size() > 0:
+
+            #DEQUEUE FIRST PATH
+            p = q.dequeue()
+
+            ##IF THE LAST VERTEX IN THE PATH HAS NOT BEEN VISITED V[-1] THEN CHECK IF IT'S THE TARGET VERTEX AND IF SO RETURN PATH
+            if p[-1] not in visited:
+                if p[-1] == destination_vertex:
+                    return p
+
+            ## ADD LAST VERTEX FROM PATH TO VISITED
+            visited.add(p[-1])
+
+            ##ADD A PATH OF THE NEIGHBORS TO THE BACK OF THE QUEUE
+            neighbors = self.get_neighbors(p[-1])
+            for next_vert in neighbors:
+                ##create a copy of the original path for each new vertex and add that vertex to the path THEN enqueue the new path
+                copy = p.copy()
+                copy.append(next_vert)
+                q.enqueue(copy)
+                
+
 
     def dfs(self, starting_vertex, destination_vertex):
         """
@@ -140,7 +169,34 @@ class Graph:
         starting_vertex to destination_vertex in
         depth-first order.
         """
-        pass  # TODO
+        s = Stack()
+
+        ##USE LIST TO REPRESENT PATH, the first should include the starting vertex
+        ## PUSH THE PATH
+        s.push([starting_vertex])
+        ##CREATE A SET TO STORE VISITED VERTICES
+        visited = set()        
+        ##REPEAT UNTIL QUEUE IS EMPTY
+        while s.size() > 0:
+
+            #POP FIRST PATH
+            p = s.pop()
+
+            ##IF THE LAST VERTEX IN THE PATH HAS NOT BEEN VISITED V[-1] THEN CHECK IF IT'S THE TARGET VERTEX AND IF SO RETURN PATH
+            if p[-1] not in visited:
+                if p[-1] == destination_vertex:
+                    return p
+
+            ## ADD LAST VERTEX FROM PATH TO VISITED
+            visited.add(p[-1])
+
+            ##ADD A PATH OF THE NEIGHBORS TO THE BACK OF THE QUEUE
+            neighbors = self.get_neighbors(p[-1])
+            for next_vert in neighbors:
+                ##create a copy of the original path for each new vertex and add that vertex to the path THEN enqueue the new path
+                copy = p.copy()
+                copy.append(next_vert)
+                s.push(copy)
 
     def dfs_recursive(self, starting_vertex, destination_vertex):
         """
@@ -213,12 +269,12 @@ if __name__ == '__main__':
     Valid BFS path:
         [1, 2, 4, 6]
     '''
-    # print(graph.bfs(1, 6))
+    print(graph.bfs(1, 6))
 
     '''
     Valid DFS paths:
         [1, 2, 4, 6]
         [1, 2, 4, 7, 6]
     '''
-    # print(graph.dfs(1, 6))
+    print(graph.dfs(1, 6))
     # print(graph.dfs_recursive(1, 6))
