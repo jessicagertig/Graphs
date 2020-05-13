@@ -176,7 +176,7 @@ class Graph:
         s.push([starting_vertex])
         ##CREATE A SET TO STORE VISITED VERTICES
         visited = set()        
-        ##REPEAT UNTIL QUEUE IS EMPTY
+        ##REPEAT UNTIL STACK IS EMPTY
         while s.size() > 0:
 
             #POP FIRST PATH
@@ -190,15 +190,15 @@ class Graph:
             ## ADD LAST VERTEX FROM PATH TO VISITED
             visited.add(p[-1])
 
-            ##ADD A PATH OF THE NEIGHBORS TO THE BACK OF THE QUEUE
+            ##ADD A PATH OF THE NEIGHBORS TO THE STACK
             neighbors = self.get_neighbors(p[-1])
             for next_vert in neighbors:
-                ##create a copy of the original path for each new vertex and add that vertex to the path THEN enqueue the new path
+                ##create a copy of the original path for each new vertex and add that vertex to the path THEN push the new path
                 copy = p.copy()
                 copy.append(next_vert)
                 s.push(copy)
 
-    def dfs_recursive(self, starting_vertex, destination_vertex):
+    def dfs_recursive(self, starting_vertex, destination_vertex, visited=None, s=None):
         """
         Return a list containing a path from
         starting_vertex to destination_vertex in
@@ -206,7 +206,38 @@ class Graph:
 
         This should be done using recursion.
         """
-        pass  # TODO
+        if s == None:
+            s = Stack()
+        ##USE LIST TO REPRESENT PATH, the first should include the starting vertex
+        ## PUSH THE PATH
+        if s.size() == 0:
+            s.push([starting_vertex])
+        ##CREATE A SET TO STORE VISITED VERTICES
+        if visited == None:
+            visited = set()        
+        ##REPEAT UNTIL STACK IS EMPTY
+        if s.size() > 0:
+
+            #POP FIRST PATH
+            p = s.pop()
+
+            ##IF THE LAST VERTEX IN THE PATH HAS NOT BEEN VISITED V[-1] THEN CHECK IF IT'S THE TARGET VERTEX AND IF SO RETURN PATH
+            if p[-1] not in visited:
+                if p[-1] == destination_vertex:
+                    return p
+
+            ## ADD LAST VERTEX FROM PATH TO VISITED
+            visited.add(p[-1])
+
+            ##ADD A PATH OF THE NEIGHBORS TO THE STACK
+            neighbors = self.get_neighbors(p[-1])
+            for next_vert in neighbors:
+                ##create a copy of the original path for each new vertex and add that vertex to the path THEN push the new path
+                copy = p.copy()
+                copy.append(next_vert)
+                s.push(copy)
+            return self.dfs_recursive(next_vert, destination_vertex, visited, s)
+
 
 if __name__ == '__main__':
     graph = Graph()  # Instantiate your graph
@@ -277,4 +308,4 @@ if __name__ == '__main__':
         [1, 2, 4, 7, 6]
     '''
     print(graph.dfs(1, 6))
-    # print(graph.dfs_recursive(1, 6))
+    print(graph.dfs_recursive(1, 6))
