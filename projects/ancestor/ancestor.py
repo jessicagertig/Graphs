@@ -9,19 +9,10 @@ def earliest_ancestor(ancestors, starting_node):
     ##begin a graph
     family = Graph()
     ##add the nodes
-    members = []
     for each in ancestors:
-        parent = each[0]
-        child = each[1]
-        if parent not in members:
-            members.append(parent)
-        if child not in members:
-            members.append(child)
-    for each in members:
-        family.add_vertex(each)
-    
-    ##define the edges which will go up only from child up to parent
-    for each in ancestors:
+        family.add_vertex(each[0])
+        family.add_vertex(each[1])
+        ##define the edges which will go up only from child up to parent
         family.add_edge(each[1], each[0])
 
     ##use the graph to search for oldest ancestor (furthest away)
@@ -30,8 +21,6 @@ def earliest_ancestor(ancestors, starting_node):
     
     ##use a queue to keep track of paths
     q = Queue()
-    ##set up set for nodes visited
-    visited = set()
     ##intiate a path with beginning node
     q.enqueue([starting_node])
     ##we will need to find all possible paths
@@ -40,8 +29,6 @@ def earliest_ancestor(ancestors, starting_node):
     while q.size() > 0:
         ##deqeue first path and store as variable
         p = q.dequeue()
-        ## ADD LAST VERTEX FROM PATH TO VISITED
-        visited.add(p[-1])
         parents = family.get_neighbors(p[-1])
         if len(parents) == 0:
             ##account for case with no parents
@@ -71,7 +58,7 @@ def earliest_ancestor(ancestors, starting_node):
                     copy.append(parent)
                     q.enqueue(copy)
         ###is there a way to consolidate repeated code?
-        else:
+        else:##appending new parents to list
             for parent in parents:
                 copy = p.copy()
                 copy.append(parent)
