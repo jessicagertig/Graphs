@@ -1,3 +1,6 @@
+import random
+from util import Stack, Queue
+
 class User:
     def __init__(self, name):
         self.name = name
@@ -42,11 +45,30 @@ class SocialGraph:
         self.last_id = 0
         self.users = {}
         self.friendships = {}
-        # !!!! IMPLEMENT ME
 
         # Add users
-
+        for i in range (0, num_users):
+            self.add_user(f'User {i}')
         # Create friendships
+        # Generate all possible friendship combinations
+        possible_friendships = []
+        # Avoid duplicates by ensuring the first number is smaller than the second number by adding 1 to user_id as the beginning of the range in the nested for loop
+        for user_id in self.users:
+            for friend_id in range(user_id + 1, self.last_id + 1):
+                possible_friendships.append((user_id, friend_id))
+        #Shuffle the possible friendships to increase balance
+        random.shuffle(possible_friendships)
+        # Create frienships for the first X pairs of the list
+        # X is determined by formula: num_users * avg_friendships // 2
+        # Need to divide by 2 since each add_friendship() creates 2 friendships
+        for i in range(num_users * avg_friendships // 2):
+            friendship = possible_friendships[i]
+            self.add_friendship(friendship[0], friendship[1])
+
+    ##create get_friends helper function to use in get_all_social_paths below
+    def get_friends(self, user_id):
+        friends = self.friendships[user_id]
+        return friends
 
     def get_all_social_paths(self, user_id):
         """
@@ -58,7 +80,28 @@ class SocialGraph:
         The key is the friend's ID and the value is the path.
         """
         visited = {}  # Note that this is a dictionary, not a set
-        # !!!! IMPLEMENT ME
+        # self.last_id = 0
+        # self.users = {}
+        # self.friendships = {}
+        # use self.friendships to extract needed data dictionary with integer, set as key, pair
+        #first populate visited with user_id provided, we will search out all possible paths from there with bft
+        #use Queue
+        #also user_id is first element in all friendship paths
+        q = Queue()
+        q.enqueue([user_id])
+        while q.size() > 0:
+            ##dequeue first path and store as variable
+            p = q.dequeue()
+            ##check if last element of path in visited, and if not add both the key and value
+            if p[-1] not in visited:
+                visited[p[-1]] = p   
+                ##find friends, add friends to paths
+                friends = self.get_friends(p[-1])
+                for friend in friends:
+                    copy = p.copy()
+                    copy.append(friend)
+                    q.enqueue(copy)
+                
         return visited
 
 
